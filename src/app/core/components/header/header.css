@@ -1,0 +1,38 @@
+:host {
+  height: 100%;
+}
+
+.header {
+  all: unset;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.header__presentation {
+  height: 4rem;
+  padding-left: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+
+  img {
+    margin-right: 2rem;
+  }
+
+  h1 {
+    all: unset;
+    font-size: 2rem;
+    background: linear-gradient(#42A5F5, #E1BEE7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.header__navigation {
+  height: 3rem;
+}

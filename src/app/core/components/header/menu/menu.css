@@ -1,0 +1,43 @@
+:host {
+  width: 100%;
+  height: 100%;
+}
+
+.navigation-menu {
+  height: 100%;
+  display: flex;
+  background-image: linear-gradient(to right top, #42a5f5, #85a9f5, #afaef1, #ccb5ec, #e1bee7);
+}
+
+.navigation-menu__list {
+  all: unset;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  height: 100%;
+  padding-left: 1rem;
+  box-sizing: border-box;
+}
+
+.navigation-menu__item {
+  all: unset;
+  font-size: 1rem;
+  font-weight: 600;
+
+
+  &:hover {
+
+  }
+
+  a {
+    all: unset;
+    height: 100%;
+    cursor: pointer;
+    padding: 0.3rem;
+    box-sizing: border-box;
+
+    &:hover, &.active {
+      border-bottom: 2px solid black;
+    }
+  }
+}
