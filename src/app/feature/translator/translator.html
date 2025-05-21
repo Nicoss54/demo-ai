@@ -20,7 +20,7 @@
       <p>{{ translatedText() }}</p>
     </section>
     <section class="translator-content__container__action">
-      <button type="button" nz-button nzType="primary" (click)="translate(textToTranslate())">Translate</button>
+      <button type="button" nz-button nzType="primary" (click)="translate(textToTranslate())">{{ 'translate' |translate }}</button>
     </section>
   </article>
 </section>
