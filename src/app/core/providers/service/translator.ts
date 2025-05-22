@@ -1,6 +1,6 @@
 import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { IAIMonitor, IAITranslatorInstance } from '@demo-ai/shared/ai-api.model';
-import { BehaviorSubject, catchError, filter, from, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, from, of, switchMap, tap } from 'rxjs';
 import { AITranslator } from '../tokens/ai-translator';
 
 @Injectable({ providedIn: 'root' })
@@ -29,10 +29,10 @@ export class TranslatorService {
             }),
           ).pipe(
             tap(status => untracked(() => this._availableStatus.set(status))),
-            filter(status => ['available', 'downloadable', 'downloading'].includes(status)),
             switchMap(() => this.createTranslatorInstance(sourceLang, targetLang)),
             catchError(() => {
               untracked(() => this._availableStatus.set('unavailable'));
+              this._triggerNewTranslation.next(null);
               this.translatorInstance = null;
               return of(null);
             }),
@@ -71,24 +71,18 @@ export class TranslatorService {
    * @throws An error if the creation of the translator instance fails.
    */
   private async createTranslatorInstance(sourceLang: string, targetLang: string) {
-    try {
-      this.translatorInstance = await this.AITranslator.create({
-        sourceLanguage: sourceLang,
-        targetLanguage: targetLang,
-        monitor: (m: IAIMonitor) => {
-          m.addEventListener('downloadprogress', e => {
-            console.info(`Downloaded ${e.loaded * 100}%`);
-          });
-        },
-      });
-      await this.translatorInstance.ready;
-      this._triggerNewTranslation.next(null);
-      untracked(() => this._availableStatus.set('available'));
-      return this.translatorInstance;
-    } catch (error) {
-      this.translatorInstance = null;
-      untracked(() => this._availableStatus.set('unavailable'));
-      throw error;
-    }
+    this.translatorInstance = await this.AITranslator.create({
+      sourceLanguage: sourceLang,
+      targetLanguage: targetLang,
+      monitor: (m: IAIMonitor) => {
+        m.addEventListener('downloadprogress', e => {
+          console.info(`Downloaded ${e.loaded * 100}%`);
+        });
+      },
+    });
+    await this.translatorInstance.ready;
+    this._triggerNewTranslation.next(null);
+    untracked(() => this._availableStatus.set('available'));
+    return this.translatorInstance;
   }
 }

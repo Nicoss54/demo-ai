@@ -1,11 +1,12 @@
-@let result = finalResult();
 <section class="detector-page">
-  <nz-form-item>
-    <nz-form-label nzFor="text-input">Write the text to detect the language</nz-form-label>
-    <textarea id="text-input" nz-input [rows]="5" #textInput></textarea>
-  </nz-form-item>
-  <button type="button" nz-button nzType="primary" (click)="detectLanguage(textInput.value)">Detect</button>
-  @if(result) {
-  <p>Language detected is {{result.detectedLanguage}} at {{ result.confidence }}</p>
-  }
+  <div class="detector-page__container">
+    <nz-form-item>
+      <nz-form-label nzFor="text-input">Write the text to detect the language</nz-form-label>
+      <textarea id="text-input" nz-input [rows]="5" #textInput></textarea>
+    </nz-form-item>
+    <button type="button" nz-button nzType="primary" (click)="detectLanguage(textInput.value)">Detect</button>
+    @if(finalResult(); as result) {
+    <p>Language detected is {{result.detectedLanguage}} at {{ result.confidence }}</p>
+    }
+  </div>
 </section>

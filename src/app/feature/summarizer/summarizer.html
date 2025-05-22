@@ -5,6 +5,8 @@
       <textarea id="text-input" nz-input [rows]="5" #textInput></textarea>
     </nz-form-item>
     <button type="button" nz-button nzType="primary" (click)="summarize(textInput.value)">Summarize</button>
-    <p>Summary: {{ summarizedText() }}</p>
+    @if(summarizedText(); as summarizedText) {
+    <p>Summary: {{ summarizedText }}</p>
+    }
   </div>
 </section>

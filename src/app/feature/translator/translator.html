@@ -18,8 +18,9 @@
           <nz-option nzValue="pt" nzLabel="Portuguese" />
         </nz-select>
       </nz-form-item>
-      <div>Text Translated</div>
-      <p>{{ translatedText() }}</p>
+      @if(translatedText(); as translatedText) {
+      <p>Text Translated: {{ translatedText }}</p>
+      }
     </section>
     <section class="translator-content__container__action">
       <button type="button" nz-button nzType="primary" (click)="translate(textToTranslate())">Translate</button>
