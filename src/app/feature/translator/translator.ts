@@ -16,7 +16,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 export class Translator {
   private readonly translatorService = inject(TranslatorService);
   private readonly nzNotificationService = inject(NzNotificationService);
-  protected isTranslatorAPIAvailable = this.translatorService.isAvailable;
+  protected translationAPIAvailable = this.translatorService.availableStatus;
 
   textToTranslate = signal('');
   translatedText = signal<string | null>(null);
@@ -24,22 +24,20 @@ export class Translator {
 
   constructor() {
     effect(() => {
-      const isAvailable = this.isTranslatorAPIAvailable();
+      const availableStatus = this.translationAPIAvailable();
 
-      if (isAvailable) {
+      if (availableStatus === 'available') {
         this.nzNotificationService.success('Congratulation', 'Translator AI API is available for this configuration:)');
       }
 
-      if (isAvailable === false) {
+      if (availableStatus === 'unavailable') {
         this.nzNotificationService.error('Error', 'Translator AI API is not available for this configuration:(');
       }
     });
   }
 
   async translate(text: string): Promise<void> {
-    console.log(text);
     const translation = await this.translatorService.translate(text);
-    console.log(translation);
     this.translatedText.set(translation);
   }
 

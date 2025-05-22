@@ -1,7 +1,7 @@
-import { effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { ITranslatorInstance } from '@demo-ai/shared/ai-api.model';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { IAiMonitor, ITranslatorInstance } from '@demo-ai/shared/ai-api.model';
+import { BehaviorSubject, catchError, filter, from, of, switchMap, tap } from 'rxjs';
 import { AITranslator } from '../tokens/ai-translator';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TranslatorService {
@@ -9,49 +9,39 @@ export class TranslatorService {
   private translatorInstance: ITranslatorInstance | null = null;
   private _sourceLang = signal('en');
   private _targetLang = signal('fr');
-  private _isAvailable = signal<null | boolean>(null);
+  private _availableStatus = signal<string | null>(null);
+  private translationConfigObject = computed(() => ({ sourceLang: this._sourceLang(), targetLang: this._targetLang() }));
   private readonly _triggerNewTranslation = new BehaviorSubject<null>(null);
 
   triggerNewTranslation = this._triggerNewTranslation.asObservable();
-  sourceLang = this._sourceLang.asReadonly();
   targetLang = this._targetLang.asReadonly();
-  isAvailable = this._isAvailable.asReadonly();
+  availableStatus = this._availableStatus.asReadonly();
 
   constructor() {
-    /**
-     * First effect to check if the model is available for th specific configuration of
-     * sourceLang and targetLang
-     */
-    effect(async () => {
-      const sourceLang = this._sourceLang();
-      const targetLang = this._targetLang();
+    effect(onCleanup => {
+      const translationConfig = this.translationConfigObject();
+      const translationSetup$ = of(translationConfig).pipe(
+        switchMap(({ sourceLang, targetLang }) =>
+          from(
+            this.AITranslator.availability({
+              sourceLanguage: sourceLang,
+              targetLanguage: targetLang,
+            }),
+          ).pipe(
+            tap(status => untracked(() => this._availableStatus.set(status))),
+            filter(status => ['available', 'downloadable', 'downloading'].includes(status)),
+            switchMap(() => this.createTranslatorInstance(sourceLang, targetLang)),
+            catchError(() => {
+              untracked(() => this._availableStatus.set('unavailable'));
+              this.translatorInstance = null;
+              return of(null);
+            }),
+          ),
+        ),
+      );
 
-      try {
-        const availability = await this.AITranslator.availability({ sourceLanguage: sourceLang, targetLanguage: targetLang });
-        if (availability === 'available') {
-          untracked(() => this._isAvailable.set(true));
-        } else {
-          untracked(() => this._isAvailable.set(false));
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (_) {
-        untracked(() => this._isAvailable.set(false));
-      }
-    });
-
-    /**
-     * Second effect to create the translator Instance
-     * This translator instance is created only if the model is available
-     */
-    effect(async () => {
-      this.translatorInstance = null;
-      const isAvailable = this._isAvailable();
-      const sourceLang = untracked(this._sourceLang);
-      const targetLang = untracked(this._targetLang);
-      if (isAvailable) {
-        this.translatorInstance = await this.AITranslator.create({ sourceLanguage: sourceLang, targetLanguage: targetLang });
-        this._triggerNewTranslation.next(null);
-      }
+      const subscription = translationSetup$.subscribe();
+      onCleanup(() => subscription.unsubscribe());
     });
   }
 
@@ -63,7 +53,43 @@ export class TranslatorService {
   }
 
   setTargetLang(lang: string): void {
-    this._isAvailable.set(null);
+    this._availableStatus.set(null);
     this._targetLang.set(lang);
+  }
+
+  /**
+   * Creates a new translator instance with the specified source and target languages.
+   *
+   * This method sets the `translatorInstance` to null before attempting to create
+   * a new instance using the `AITranslator` service. It monitors the download progress
+   * and updates the availability status accordingly. If successful, it marks the
+   * instance as ready and triggers a new translation event.
+   *
+   * @param sourceLang - The source language code for translation.
+   * @param targetLang - The target language code for translation.
+   * @returns A promise that resolves to the created translator instance.
+   * @throws An error if the creation of the translator instance fails.
+   */
+  private async createTranslatorInstance(sourceLang: string, targetLang: string) {
+    this.translatorInstance = null;
+    try {
+      this.translatorInstance = await this.AITranslator.create({
+        sourceLanguage: sourceLang,
+        targetLanguage: targetLang,
+        monitor: (m: IAiMonitor) => {
+          m.addEventListener('downloadprogress', e => {
+            console.log(`Downloaded ${e.loaded * 100}%`);
+          });
+        },
+      });
+      await this.translatorInstance.ready;
+      this._triggerNewTranslation.next(null);
+      untracked(() => this._availableStatus.set('available'));
+      return this.translatorInstance;
+    } catch (error) {
+      this.translatorInstance = null;
+      untracked(() => this._availableStatus.set('unavailable'));
+      throw error;
+    }
   }
 }
