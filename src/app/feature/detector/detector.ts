@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { LanguageDetectorService } from '@demo-ai/core/providers/service/language-detector';
-import type { IDetectorResult } from '@demo-ai/shared/ai-api.model';
+import type { IAIDetectorResult } from '@demo-ai/shared/ai-api.model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -21,8 +21,8 @@ const languageIsoMap = new Map([
 export class Detector {
   private readonly languageDetectorService = inject(LanguageDetectorService);
   private readonly nzNotificationService = inject(NzNotificationService);
-  private isDetectorAvailable = this.languageDetectorService.isAvailable;
-  private _detections = signal<IDetectorResult[]>([]);
+  private detectorAvailableStatus = this.languageDetectorService.availableStatus;
+  private _detections = signal<IAIDetectorResult[]>([]);
 
   finalResult = computed(() => {
     const result = this._detections().at(0);
@@ -34,11 +34,14 @@ export class Detector {
 
   constructor() {
     effect(() => {
-      const availability = this.isDetectorAvailable();
-      if (availability === true) {
+      const detectorAvailableStatus = this.detectorAvailableStatus();
+      if (detectorAvailableStatus === 'available') {
         this.nzNotificationService.success('Congratulation', 'Language Detector AI API is available for this configuration:)');
       }
-      if (availability === false) {
+      if (detectorAvailableStatus === 'downloading' || detectorAvailableStatus === 'downloadable') {
+        this.nzNotificationService.info('Info', 'Model is currently downloading');
+      }
+      if (detectorAvailableStatus === 'unavailable') {
         this.nzNotificationService.error('Error', 'Language Detector AI API is not available for this configuration:(');
       }
     });

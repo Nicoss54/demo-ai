@@ -1,12 +1,12 @@
 import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { IAiMonitor, ITranslatorInstance } from '@demo-ai/shared/ai-api.model';
+import { IAIMonitor, IAITranslatorInstance } from '@demo-ai/shared/ai-api.model';
 import { BehaviorSubject, catchError, filter, from, of, switchMap, tap } from 'rxjs';
 import { AITranslator } from '../tokens/ai-translator';
 
 @Injectable({ providedIn: 'root' })
 export class TranslatorService {
   private readonly AITranslator = inject(AITranslator);
-  private translatorInstance: ITranslatorInstance | null = null;
+  private translatorInstance: IAITranslatorInstance | null = null;
   private _sourceLang = signal('en');
   private _targetLang = signal('fr');
   private _availableStatus = signal<string | null>(null);
@@ -76,9 +76,9 @@ export class TranslatorService {
       this.translatorInstance = await this.AITranslator.create({
         sourceLanguage: sourceLang,
         targetLanguage: targetLang,
-        monitor: (m: IAiMonitor) => {
+        monitor: (m: IAIMonitor) => {
           m.addEventListener('downloadprogress', e => {
-            console.log(`Downloaded ${e.loaded * 100}%`);
+            console.info(`Downloaded ${e.loaded * 100}%`);
           });
         },
       });

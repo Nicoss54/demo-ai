@@ -24,6 +24,10 @@
   display: flex;
   align-items: center;
 
+  nz-form-item {
+    width: 100%;
+  }
+
   textarea {
     resize: unset;
     width: 100%;

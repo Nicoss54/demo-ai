@@ -8,19 +8,21 @@
     </section>
     <section class="translator-content__container__output">
       <nz-form-item>
-       <nz-form-label>Choose your target lang</nz-form-label>
+        <nz-form-label>Choose your target lang</nz-form-label>
         <nz-select [ngModel]="targetLang()" (ngModelChange)="changeTargetLang($event)">
+          <nz-option nzValue="en" nzLabel="English" />
           <nz-option nzValue="fr" nzLabel="French" />
           <nz-option nzValue="es" nzLabel="Spanish" />
           <nz-option nzValue="it" nzLabel="Italian" />
           <nz-option nzValue="de" nzLabel="German" />
+          <nz-option nzValue="pt" nzLabel="Portuguese" />
         </nz-select>
       </nz-form-item>
       <div>Text Translated</div>
       <p>{{ translatedText() }}</p>
     </section>
     <section class="translator-content__container__action">
-      <button type="button" nz-button nzType="primary" (click)="translate(textToTranslate())">{{ 'translate' |translate }}</button>
+      <button type="button" nz-button nzType="primary" (click)="translate(textToTranslate())">Translate</button>
     </section>
   </article>
 </section>

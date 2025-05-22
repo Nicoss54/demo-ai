@@ -1,0 +1,10 @@
+<section class="summarizer-page">
+  <div class="summarizer-page__container">
+    <nz-form-item>
+      <nz-form-label nzFor="text-input">Write the text to summarize</nz-form-label>
+      <textarea id="text-input" nz-input [rows]="5" #textInput></textarea>
+    </nz-form-item>
+    <button type="button" nz-button nzType="primary" (click)="summarize(textInput.value)">Summarize</button>
+    <p>Summary: {{ summarizedText() }}</p>
+  </div>
+</section>

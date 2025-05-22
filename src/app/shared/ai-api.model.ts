@@ -1,33 +1,59 @@
-export interface IAiMonitor {
-  addEventListener(event: string, callback: (event: { loaded: number }) => void): void;
+export interface IAIMonitorEvent {
+  loaded: number;
+  total: number;
 }
 
-export interface ITranslatorOptions {
+export interface IAIMonitor {
+  addEventListener(event: string, callback: (event: IAIMonitorEvent) => void): void;
+}
+
+export interface IAISharedMonitor {
+  monitor?(m: IAIMonitor): void;
+}
+
+export interface IAITranslatorOptions extends IAISharedMonitor {
   sourceLanguage: string;
   targetLanguage: string;
-  monitor?(m: IAiMonitor): void;
 }
 
-export interface ITranslatorInstance {
+export interface IAITranslatorInstance {
   translate(text: string): Promise<string>;
   ready: Promise<boolean>;
 }
 
-export interface ITranslator {
-  create(options: ITranslatorOptions): Promise<ITranslatorInstance>;
-  availability(options: ITranslatorOptions): Promise<string>;
+export interface IAITranslator {
+  create(options: IAITranslatorOptions): Promise<IAITranslatorInstance>;
+  availability(options: IAITranslatorOptions): Promise<string>;
 }
 
-export interface IDetectorResult {
+export interface IAIDetectorResult {
   detectedLanguage: string;
   confidence: number;
 }
 
-export interface ILanguageDetectorInstance {
-  detect(text: string): Promise<IDetectorResult[]>;
+export interface IAILanguageDetectorInstance {
+  detect(text: string): Promise<IAIDetectorResult[]>;
+  ready: Promise<boolean>;
 }
 
-export interface ILanguageDetector {
+export interface IAISummarizerConfig extends IAISharedMonitor {
+  sharedContext: string;
+  type: string;
+  format: string;
+  length: string;
+}
+
+export interface IAISummarizerInstance {
+  summarize(text: string): Promise<string>;
+  ready: Promise<boolean>;
+}
+
+export interface IAISummarizer {
+  create(config?: Partial<IAISummarizerConfig>): Promise<IAISummarizerInstance>;
   availability(): Promise<string>;
-  create(): Promise<ILanguageDetectorInstance>;
+}
+
+export interface IAILanguageDetector {
+  availability(): Promise<string>;
+  create(config?: IAISharedMonitor): Promise<IAILanguageDetectorInstance>;
 }

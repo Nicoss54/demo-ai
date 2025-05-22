@@ -1,7 +1,6 @@
 import { Component, effect, inject, linkedSignal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatorService } from '@demo-ai/core/providers/service/translator';
-import { TranslatePipe } from '@demo-ai/shared/pipes/tranlate';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -11,7 +10,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 @Component({
   templateUrl: './translator.html',
   styleUrl: './translator.css',
-  imports: [FormsModule, NzSelectModule, NzInputModule, NzButtonModule, NzFormModule, TranslatePipe],
+  imports: [FormsModule, NzSelectModule, NzInputModule, NzButtonModule, NzFormModule],
 })
 export class Translator {
   private readonly translatorService = inject(TranslatorService);
@@ -28,6 +27,10 @@ export class Translator {
 
       if (availableStatus === 'available') {
         this.nzNotificationService.success('Congratulation', 'Translator AI API is available for this configuration:)');
+      }
+
+      if (availableStatus === 'downloading' || availableStatus === 'downloadable') {
+        this.nzNotificationService.info('Info', 'Model is currently downloading');
       }
 
       if (availableStatus === 'unavailable') {
