@@ -71,7 +71,6 @@ export class TranslatorService {
    * @throws An error if the creation of the translator instance fails.
    */
   private async createTranslatorInstance(sourceLang: string, targetLang: string) {
-    this.translatorInstance = null;
     try {
       this.translatorInstance = await this.AITranslator.create({
         sourceLanguage: sourceLang,
