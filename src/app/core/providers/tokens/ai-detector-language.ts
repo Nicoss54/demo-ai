@@ -1,4 +1,3 @@
-import { inject, InjectionToken } from '@angular/core';
-import { WINDOW } from './window';
+import { InjectionToken } from '@angular/core';
 
-export const AILanguageDetector = new InjectionToken('LANGUAGE_DETECTOR', { factory: () => inject(WINDOW).LanguageDetector });
+export const AILanguageDetector = new InjectionToken('LANGUAGE_DETECTOR', { factory: () => LanguageDetector });

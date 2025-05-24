@@ -1,6 +1,5 @@
-import { inject, InjectionToken } from '@angular/core';
-import { WINDOW } from './window';
+import { InjectionToken } from '@angular/core';
 
 export const AITranslator = new InjectionToken('AI_TRANSLATOR', {
-  factory: () => inject(WINDOW).Translator,
+  factory: () => Translator,
 });
