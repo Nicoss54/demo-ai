@@ -58,3 +58,24 @@ export interface IAILanguageDetector {
   availability(): Promise<string>;
   create(config?: IAISharedMonitor): Promise<IAILanguageDetectorInstance>;
 }
+
+export interface IAIWriterCreateCoreConfig extends IAISharedMonitor {
+  tone?: string;
+  format?: string;
+  length?: string;
+  sharedContext?: string;
+}
+
+export interface IAIWriterCreateConfig {
+  context: string;
+}
+
+export interface IAIWriterInstance {
+  ready: Promise<boolean>;
+  write(text: string, config?: IAIWriterCreateConfig): Promise<string>;
+}
+
+export interface IAIWriter {
+  create(config?: IAIWriterCreateCoreConfig): Promise<IAIWriterInstance>;
+  availability(): Promise<string>;
+}
