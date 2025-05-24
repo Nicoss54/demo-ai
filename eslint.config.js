@@ -13,9 +13,15 @@ module.exports = tseslint.config(
     plugins: {
       prettier,
     },
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.?(*)json',
+      },
+    },
     rules: {
       'prettier/prettier': ['error', prettierConfig],
       '@angular-eslint/component-class-suffix': 'off',
+      '@typescript-eslint/no-floating-promises': 'error',
       '@angular-eslint/directive-selector': [
         'error',
         {

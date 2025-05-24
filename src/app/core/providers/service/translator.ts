@@ -1,5 +1,5 @@
 import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { IAIMonitor, IAITranslatorInstance, type IAIMonitorEvent } from '@demo-ai/shared/ai-api.model';
+import type { IAIMonitor, IAIMonitorEvent, IAITranslatorInstance } from '@demo-ai/shared/ai-api.model';
 import { BehaviorSubject, catchError, from, of, switchMap, tap } from 'rxjs';
 import { AITranslator } from '../tokens/ai-translator';
 

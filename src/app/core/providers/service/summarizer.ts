@@ -1,5 +1,5 @@
 import { effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { IAISummarizerConfig, IAISummarizerInstance, type IAIMonitorEvent } from '@demo-ai/shared/ai-api.model';
+import type { IAIMonitorEvent, IAISummarizerConfig, IAISummarizerInstance } from '@demo-ai/shared/ai-api.model';
 import { AISummarizer } from '../tokens/ai-summarizer';
 
 @Injectable({

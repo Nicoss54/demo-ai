@@ -1,11 +1,5 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import {
-  IAIWriterCreateCoreConfig,
-  type IAIMonitor,
-  type IAIMonitorEvent,
-  type IAIWriterCreateConfig,
-  type IAIWriterInstance,
-} from '@demo-ai/shared/ai-api.model';
+import type { IAIMonitor, IAIMonitorEvent, IAIWriterCreateConfig, IAIWriterCreateCoreConfig, IAIWriterInstance } from '@demo-ai/shared/ai-api.model';
 import { AIWriter } from '../tokens/ai-writer';
 
 @Injectable({
