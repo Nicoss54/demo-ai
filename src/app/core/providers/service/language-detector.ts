@@ -1,5 +1,5 @@
 import { effect, inject, Injectable, signal, untracked } from '@angular/core';
-import type { IAILanguageDetectorInstance, IAIMonitor } from '@demo-ai/shared/ai-api.model';
+import type { IAILanguageDetectorInstance, IAIMonitor, IAIMonitorEvent } from '@demo-ai/shared/ai-api.model';
 import { AILanguageDetector } from '../tokens/ai-detector-language';
 
 @Injectable({ providedIn: 'root' })
@@ -18,9 +18,13 @@ export class LanguageDetectorService {
         if (['available', 'downloadable', 'downloading'].includes(availability)) {
           this.detectorInstance = await this.aiLanguageDetector.create({
             monitor: (m: IAIMonitor) => {
-              m.addEventListener('downloadprogress', e => {
-                console.info(`Downloaded ${e.loaded * 100}%`);
-              });
+              const callBack = (event: IAIMonitorEvent) => {
+                console.info(`Downloaded ${event.loaded * 100}%`);
+                if (event.loaded === 1) {
+                  m.removeEventListener('downloadprogress', callBack);
+                }
+              };
+              m.addEventListener('downloadprogress', callBack);
             },
           });
           await this.detectorInstance.ready;

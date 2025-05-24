@@ -5,6 +5,7 @@ export interface IAIMonitorEvent {
 
 export interface IAIMonitor {
   addEventListener(event: string, callback: (event: IAIMonitorEvent) => void): void;
+  removeEventListener(event: string, callback: (event: IAIMonitorEvent) => void): void;
 }
 
 export interface IAISharedMonitor {

@@ -1,5 +1,5 @@
 import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { IAIMonitor, IAITranslatorInstance } from '@demo-ai/shared/ai-api.model';
+import { IAIMonitor, IAITranslatorInstance, type IAIMonitorEvent } from '@demo-ai/shared/ai-api.model';
 import { BehaviorSubject, catchError, from, of, switchMap, tap } from 'rxjs';
 import { AITranslator } from '../tokens/ai-translator';
 
@@ -75,9 +75,13 @@ export class TranslatorService {
       sourceLanguage: sourceLang,
       targetLanguage: targetLang,
       monitor: (m: IAIMonitor) => {
-        m.addEventListener('downloadprogress', e => {
-          console.info(`Downloaded ${e.loaded * 100}%`);
-        });
+        const callBack = (event: IAIMonitorEvent) => {
+          console.info(`Downloaded ${event.loaded * 100}%`);
+          if (event.loaded === 1) {
+            m.removeEventListener('downloadprogress', callBack);
+          }
+        };
+        m.addEventListener('downloadprogress', callBack);
       },
     });
     await this.translatorInstance.ready;
