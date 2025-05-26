@@ -1,59 +1,54 @@
-# DemoAi
+# Let's Talk About AI :)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.12.
+## Introduction
 
-## Development server
+At Google I/O 2025, several native AI-oriented web APIs were unveiled. These APIs allow you to use AI directly in your browser in the following contexts:
 
-To start a local development server, run:
+- Translation (Translation API)
+- Language detection (Language Detector API)
+- Summarization (Summarizer API)
+- Writing (Writer API)
+- Rephrasing (Rewriter API)
 
-```bash
-ng serve
+These APIs are experimental for some features and behind feature flags.
+
+## Enabling These APIs
+
+To enable these APIs, go to Chrome's flags page:
+
+```
+chrome://flags
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+And enable the following flags:
 
-## Code scaffolding
+- Prompt API for Gemini Nano
+- Prompt API for Gemini Nano with Multimodal Input
+- Summarization API for Gemini Nano
+- Writer API for Gemini Nano
+- Rewriter API for Gemini Nano
+- Language detection web platform API
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+After enabling all flags, restart Chrome, open the console, and type the following code:
 
-```bash
-ng generate component component-name
+```javascript
+await LanguageModel.availability();
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+If the code returns "available", then the Gemini Nano model is ready to use.
+
+## Installing Project Dependencies
+
+This project uses Bun as its package manager. To install the project dependencies, run the following command at the project root:
 
 ```bash
-ng generate --help
+bun install --frozen-lockfile
 ```
 
-## Building
+## Running the Project
 
-To build the project run:
+At the project root, run the following command:
 
 ```bash
-ng build
+bun start
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
