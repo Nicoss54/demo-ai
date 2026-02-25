@@ -1,23 +1,23 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { WriterService } from '@demo-ai/core/providers/service/writer';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   templateUrl: './writer.html',
   styleUrl: './writer.css',
-  imports: [NzFormModule, NzInputModule, NzButtonModule],
+  imports: [NzFormModule, NzInputModule, NzButtonModule, NzAlertModule],
 })
 export class Writer {
   private readonly writerService = inject(WriterService);
   private readonly nzNotificationService = inject(NzNotificationService);
-  private readonly nzMessageService = inject(NzMessageService);
   private availableStatus = this.writerService.availableStatus;
 
-  finalResult = signal<string | null>(null);
+  protected readonly finalResult = signal<string | null>(null);
+  protected readonly isLoading = signal(false);
 
   constructor() {
     effect(() => {
@@ -35,9 +35,10 @@ export class Writer {
   }
 
   async write(text: string): Promise<void> {
-    const messageId = this.nzMessageService.loading('Writing...', { nzDuration: 0 }).messageId;
+    this.isLoading.set(true);
     const result = await this.writerService.write(text);
-    this.nzMessageService.remove(messageId);
+    console.log(result);
+    this.isLoading.set(false);
     this.finalResult.set(result);
   }
 }

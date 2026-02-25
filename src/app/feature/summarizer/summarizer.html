@@ -4,9 +4,11 @@
       <nz-form-label nzFor="text-input">Write the text to summarize</nz-form-label>
       <textarea id="text-input" nz-input [rows]="5" #textInput></textarea>
     </nz-form-item>
-    <button type="button" nz-button nzType="primary" (click)="summarize(textInput.value)">Summarize</button>
-    @if(summarizedText(); as summarizedText) {
-    <p>Summary: {{ summarizedText }}</p>
-    }
+    <button type="button" nz-button nzType="primary" (click)="summarize(textInput.value)" [nzLoading]="isLoading()">Summarize</button>
+    <nz-list>
+      @for(keyPoint of summarizedTextKeyPoints(); track $index) {
+      <nz-list-item>{{ keyPoint }}</nz-list-item>
+      }
+    </nz-list>
   </div>
 </section>

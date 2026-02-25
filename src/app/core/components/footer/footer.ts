@@ -8,7 +8,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     <footer>
       <div>
         <nz-icon nzType="heart" nzTheme="outline" />
-        <span>{{ 'Made with love by' | translate }} Nicolas Frizzarin</span>
+        <span>{{ 'Demo developed by' | translate }} Nicolas Frizzarin</span>
       </div>
     </footer>
   `,

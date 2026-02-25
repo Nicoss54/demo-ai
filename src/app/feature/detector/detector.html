@@ -1,12 +1,20 @@
-<section class="detector-page">
+<article class="detector-page">
   <div class="detector-page__container">
     <nz-form-item>
       <nz-form-label nzFor="text-input">Write the text to detect the language</nz-form-label>
       <textarea id="text-input" nz-input [rows]="5" #textInput></textarea>
     </nz-form-item>
     <button type="button" nz-button nzType="primary" (click)="detectLanguage(textInput.value)">Detect</button>
-    @if(finalResult(); as result) {
-    <p>Language detected is {{result.detectedLanguage}} at {{ result.confidence }}</p>
-    }
+    <nz-list nzGrid>
+      <div nz-row [nzGutter]="16">
+        @for(result of finalResult(); track result.detectedLanguage) {
+        <div nz-col [nzSpan]="6">
+          <nz-list-item>
+            <nz-card [nzTitle]="result.detectedLanguage">{{ result.confidence }} %</nz-card>
+          </nz-list-item>
+        </div>
+        }
+      </div>
+    </nz-list>
   </div>
-</section>
+</article>

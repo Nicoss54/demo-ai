@@ -1,14 +1,15 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { SummarizerService } from '@demo-ai/core/providers/service/summarizer';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   templateUrl: './summarizer.html',
   styleUrl: './summarizer.css',
-  imports: [NzFormModule, NzInputModule, NzButtonModule],
+  imports: [NzFormModule, NzInputModule, NzButtonModule, NzListModule],
 })
 export class Summarizer {
   private readonly summarizerService = inject(SummarizerService);
@@ -16,6 +17,14 @@ export class Summarizer {
 
   summarizerAvailabilityStatus = this.summarizerService.availableStatus;
   summarizedText = signal<string | null>(null);
+  summarizedTextKeyPoints = computed(() =>
+    this.summarizedText()
+      ?.split('*')
+      .map(item => item.replace(/\n/g, '').trim())
+      .filter(Boolean),
+  );
+
+  isLoading = signal(false);
 
   constructor() {
     effect(() => {
@@ -33,7 +42,9 @@ export class Summarizer {
   }
 
   async summarize(text: string): Promise<void> {
+    this.isLoading.set(true);
     const summarize = await this.summarizerService.summarize(text);
+    this.isLoading.set(false);
     this.summarizedText.set(summarize);
   }
 }
