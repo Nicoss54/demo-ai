@@ -1,29 +1,25 @@
-<section class="translator-content">
-  <article class="translator-content__container">
-    <section class="translator-content__container_input">
-      <nz-form-item>
-        <nz-form-label nzFor="text-input">Write your text to translate</nz-form-label>
-        <textarea id="" nz-input [rows]="5" [ngModel]="textToTranslate()" (ngModelChange)="setTextToTranslate($event)"></textarea>
-      </nz-form-item>
-    </section>
-    <section class="translator-content__container__output">
-      <nz-form-item>
-        <nz-form-label>Choose your target lang</nz-form-label>
-        <nz-select [ngModel]="targetLang()" (ngModelChange)="changeTargetLang($event)">
-          <nz-option nzValue="en" nzLabel="English" />
-          <nz-option nzValue="fr" nzLabel="French" />
-          <nz-option nzValue="es" nzLabel="Spanish" />
-          <nz-option nzValue="it" nzLabel="Italian" />
-          <nz-option nzValue="de" nzLabel="German" />
-          <nz-option nzValue="pt" nzLabel="Portuguese" />
-        </nz-select>
-      </nz-form-item>
-      @if(translatedText(); as translatedText) {
-      <p>Text Translated: {{ translatedText }}</p>
-      }
-    </section>
+<article class="translator-content">
+  <section class="translator-content__container">
+    <nz-form-item>
+      <nz-form-label nzFor="text-input">Write your text to translate</nz-form-label>
+      <textarea id="text-input" nz-input [rows]="5" [(ngModel)]="textToTranslate"></textarea>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Please choose your target lang</nz-form-label>
+      <nz-select [ngModel]="targetLang()" (ngModelChange)="changeTargetLang($event)">
+        <nz-option nzValue="en" nzLabel="English" />
+        <nz-option nzValue="fr" nzLabel="French" />
+        <nz-option nzValue="es" nzLabel="Spanish" />
+        <nz-option nzValue="it" nzLabel="Italian" />
+        <nz-option nzValue="de" nzLabel="German" />
+        <nz-option nzValue="pt" nzLabel="Portuguese" />
+      </nz-select>
+    </nz-form-item>
     <section class="translator-content__container__action">
       <button type="button" nz-button nzType="primary" (click)="translate(textToTranslate())">Translate</button>
     </section>
-  </article>
-</section>
+    @if(translatedText(); as translatedText) {
+    <nz-alert nzType="info" [nzMessage]="'Translated text' | translate" [nzDescription]="translatedText" />
+    }
+  </section>
+</article>

@@ -4,9 +4,9 @@
       <nz-form-label nzFor="text-input">Describe what the AI have to write</nz-form-label>
       <textarea id="text-input" nz-input [rows]="5" #textInput></textarea>
     </nz-form-item>
-    <button type="button" nz-button nzType="primary" (click)="write(textInput.value)">Write</button>
+    <button type="button" nz-button nzType="primary" (click)="write(textInput.value)" [nzLoading]="isLoading()">Write</button>
     @if(finalResult(); as result) {
-    <p>Ai Answer: {{ result }}</p>
+    <nz-alert nzType="info" nzMessage="AI write for you" [nzDescription]="result" />
     }
   </div>
 </section>

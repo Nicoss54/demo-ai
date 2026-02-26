@@ -1,6 +1,8 @@
-import { Component, effect, inject, linkedSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, linkedSignal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatorService } from '@demo-ai/core/providers/service/translator';
+import { TranslatePipe } from '@demo-ai/shared/pipes/tranlate';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -10,7 +12,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 @Component({
   templateUrl: './translator.html',
   styleUrl: './translator.css',
-  imports: [FormsModule, NzSelectModule, NzInputModule, NzButtonModule, NzFormModule],
+  imports: [FormsModule, NzSelectModule, NzInputModule, NzButtonModule, NzFormModule, NzAlertModule, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Translator {
   private readonly translatorService = inject(TranslatorService);
@@ -46,9 +49,5 @@ export class Translator {
 
   changeTargetLang(lang: string): void {
     this.translatorService.setTargetLang(lang);
-  }
-
-  setTextToTranslate(textToTranslate: string) {
-    this.textToTranslate.set(textToTranslate);
   }
 }
